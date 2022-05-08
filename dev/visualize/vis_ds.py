@@ -14,7 +14,6 @@ def parse_args():
     parser.add_argument('--idx', type=int, default=0, help='sample_id')
     parser.add_argument('--split', required=True, help='[train, val, test, vis]')
     parser.add_argument('--loader', action='store_true', help='build dataloader')
-    parser.add_argument('--vis-3d', action='store_true', help='visualize points')
     parser.add_argument('--vis-2d', action='store_true', help='visualize images')
     parser.add_argument('--debug', action='store_true', help='debug dataset')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
@@ -58,17 +57,16 @@ def get_cfg(args):
 
 
 def vis_2d(input_dict, sample_idx, cfg):
-    from PIL import Image
     from mmdet.core.visualization.image import imshow_det_bboxes
 
+    # below are required keys of input_dict
     if input_dict['img_prefix'] is not None:
         filepath = os.path.join(input_dict['img_prefix'], input_dict['img_info']['filename'])
     else:
         filepath = input_dict['img_info']['filename']
-    # img = np.array(Image.open(filepath))  # array(shape=[H, W, 3], dtype=np.uint8)
 
-    bboxes = input_dict['ann_info']['bboxes']
-    labels = input_dict['ann_info']['labels']
+    bboxes = input_dict['ann_info']['bboxes']  # shape=[N, 4]; format=xyxy
+    labels = input_dict['ann_info']['labels']  # shape=[N]
     save_path = os.path.join(cfg.work_dir, f'sample_{sample_idx}.png')
     img = imshow_det_bboxes(filepath, bboxes, labels, show=True, out_file=save_path)
 
@@ -104,7 +102,7 @@ def main():
         import pdb; pdb.set_trace()
 
 
-# python dev/visualize/vis_ds.py configs/_base_/datasets/coco_detection.py --split test \
-# [--vis-2d --loader --work-dir ./work_dir/debug]
+# python dev/visualize/vis_ds.py configs/_base_/datasets/coco_detection.py --split val --idx 0 [--vis-2d --debug] \
+# [--loader --work-dir ./work_dir/debug]
 if __name__ == '__main__':
     main()
