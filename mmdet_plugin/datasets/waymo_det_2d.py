@@ -27,6 +27,7 @@ class WaymoDet2D(CustomDataset):
                     'sample_idx' (str): 0000000  # 1000000 for validation
                     'cam_type' (str): cam_type  # ('CAM_FRONT', 'CAM_FRONT_LEFT'...)
                     'image_path' (str): image_0/0000000.png
+                    'filename' (str): the same as 'image_path'
                     'bboxes': ndarray(shape=[N, 4], dtype=np.float32); format: [x0, y0, x1, y1]
                     'labels': ndarray(shape=[N], dtype=np.int64)
                 },
@@ -39,7 +40,9 @@ class WaymoDet2D(CustomDataset):
         # first order: cam; second: sample_idx
         for cam_type in infos[0].keys():
             for info_dict in infos:
-                data_infos.append(info_dict[cam_type])
+                new_dict = info_dict[cam_type].copy()
+                new_dict['filename'] = new_dict['image_path']
+                data_infos.append(new_dict)
 
         return data_infos
 
