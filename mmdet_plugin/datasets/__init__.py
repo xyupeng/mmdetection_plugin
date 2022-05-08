@@ -1,1 +1,1 @@
-from .waymo_det_2d import WaymoDet2d
+from .waymo_det_2d import WaymoDet2D
