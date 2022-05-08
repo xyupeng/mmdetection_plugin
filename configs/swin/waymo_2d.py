@@ -1,8 +1,3 @@
-custom_imports = dict(
-    imports=['mmdet_plugin'],
-    allow_failed_imports=False
-)
-
 _base_ = [
     '../_base_/models/faster_rcnn_r50_fpn.py',
     # '../_base_/datasets/coco_detection.py',
@@ -10,6 +5,11 @@ _base_ = [
     '../_base_/schedules/schedule_1x.py',
     '../_base_/default_runtime.py'
 ]
+
+custom_imports = dict(
+    imports=['mmdet_plugin'],
+    allow_failed_imports=False
+)
 
 # pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
 pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.2/mask_rcnn_swin_tiny_patch4_window7.pth'  # TODO: load mask rcnn
