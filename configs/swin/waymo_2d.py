@@ -45,6 +45,9 @@ model = dict(
 data = dict(
     samples_per_gpu=2,
     workers_per_gpu=2,
+    train=dict(
+        load_interval=1,
+    ),
 )
 evaluation = dict(interval=2, metric='bbox')
 

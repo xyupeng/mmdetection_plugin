@@ -13,8 +13,8 @@ from mmdet.datasets.custom import CustomDataset
 @DATASETS.register_module()
 class WaymoDet2D(CustomDataset):
     def __init__(self, load_interval=1, **kwargs):
-        super(WaymoDet2D, self).__init__(**kwargs)
         self.load_interval = load_interval
+        super(WaymoDet2D, self).__init__(**kwargs)
 
     def load_annotations(self, ann_path):
         """
