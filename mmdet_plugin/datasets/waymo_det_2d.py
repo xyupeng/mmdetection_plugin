@@ -68,3 +68,12 @@ class WaymoDet2D(CustomDataset):
                 if len(info_dict['labels']) > 0:
                     valid_inds.append(idx)
         return valid_inds
+
+    def _set_group_flag(self):
+        pass
+
+    def __getitem__(self, idx):
+        if self.test_mode:
+            return self.prepare_test_img(idx)
+        else:
+            return self.prepare_train_img(idx)
