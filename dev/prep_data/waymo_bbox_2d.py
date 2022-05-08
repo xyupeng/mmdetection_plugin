@@ -1,6 +1,6 @@
 import os
 import argparse
-from mmdet_plugin.data_converter.waymo import WaymoConverter
+from mmdet_plugin.data_converter.waymo_converter import WaymoConverter
 
 split_dict = {
     'train': 'training',
@@ -21,10 +21,10 @@ def main():
     args = parse_args()
     split = args.split
     num_segs = args.num_segs
-    root = './data/waymo/kitti_format'
+    root = './data/waymo'
 
-    converter = WaymoConverter(root=root)
-    out_path = os.path.join(root, f'waymo_det2d_infos_{split}_seg_{num_segs}.pkl')
+    converter = WaymoConverter(root=os.path.join(root, 'waymo_format'))
+    out_path = os.path.join(root, f'kitti_format/waymo_det2d_infos_{split}_seg_{num_segs}.pkl')
     split = split_dict[split]
     converter.export_bbox_2d(split=split, num_segs=num_segs, out_path=out_path)
 

@@ -35,18 +35,21 @@ data = dict(
         type=dataset_type,
         data_root=data_root,
         ann_file='waymo_det2d_infos_train_seg_20.pkl',
+        img_prefix='training',
         pipeline=train_pipeline,
     ),
     val=dict(
         type=dataset_type,
         data_root=data_root,
         ann_file='waymo_det2d_infos_val_seg_20.pkl',
+        img_prefix='training',
         pipeline=test_pipeline,
     ),
     test=dict(
         type=dataset_type,
         data_root=data_root,
-        ann_file='waymo_det2d_infos_test_seg_20.pkl',
+        ann_file='waymo_det2d_infos_val_seg_20.pkl',
+        img_prefix='training',
         pipeline=test_pipeline,
     ),
 )

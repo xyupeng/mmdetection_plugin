@@ -70,6 +70,7 @@ class WaymoConverter:
         if num_segs is not None:
             tfrecord_paths = tfrecord_paths[:num_segs]
         for seg_idx, path in enumerate(tfrecord_paths):
+            print(f'==> Start seg {seg_idx}...')
             dataset = tf.data.TFRecordDataset(path, compression_type='')
             for frame_idx, data in enumerate(dataset):
                 frame = dataset_pb2.Frame()
