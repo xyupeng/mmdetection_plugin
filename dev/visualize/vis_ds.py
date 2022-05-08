@@ -84,7 +84,7 @@ def main():
     img_info = ds.data_infos[sample_idx]  # before get_data_info()
     ann_info = ds.get_ann_info(sample_idx)
     input_dict = dict(img_info=img_info, ann_info=ann_info)
-    input_dict = ds.pre_pipeline(input_dict)
+    ds.pre_pipeline(input_dict)
     x = ds[sample_idx]  # after pipeline
     if args.debug:
         import pdb; pdb.set_trace()
