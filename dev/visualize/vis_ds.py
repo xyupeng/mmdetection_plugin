@@ -57,35 +57,20 @@ def get_cfg(args):
     return cfg
 
 
-def vis_2d(input_dict, sample_id, cfg):
+def vis_2d(input_dict, sample_idx, cfg):
     from PIL import Image
-    from mmdet.visualization.image import imshow_det_bboxes
+    from mmdet.core.visualization.image import imshow_det_bboxes
 
-    lidar2imgs = []
-    img_paths = []
-    for i, cam_type in enumerate(input_dict['cams']):
-        cam_info = input_dict['cams'][cam_type]
-        cam_id = cam_info['cam_id']
-        lidar2cam = input_dict['calib'][f'Tr_velo_to_cam_{cam_id}'].astype(np.float32)
-        intrinsic = input_dict['calib'][f'P{cam_id}'].astype(np.float32)
-        lidar2img = intrinsic @ lidar2cam
+    if input_dict['img_prefix'] is not None:
+        filepath = os.path.join(input_dict['img_prefix'], input_dict['img_info']['filename'])
+    else:
+        filepath = input_dict['img_info']['filename']
+    # img = np.array(Image.open(filepath))  # array(shape=[H, W, 3], dtype=np.uint8)
 
-        lidar2imgs.append(lidar2img)
-        img_paths.append(cam_info['image_path'])
-
-    gt_bboxes_3d = input_dict['ann_info']['gt_bboxes_3d']
-    gt_labels_3d = input_dict['ann_info']['gt_labels_3d']
-
-    imgs = [np.array(Image.open(p)) for p in img_paths]  # array(shape=[1280, 1920, 3], dtype=np.uint8)
-    box_imgs = []
-    for i, (img, lidar2img) in enumerate(zip(imgs, lidar2imgs)):
-        box_img = draw_lidar_bbox3d_on_img(gt_bboxes_3d, img, lidar2img, thickness=1)
-        box_img = Image.fromarray(box_img)
-
-        save_path = os.path.join(cfg.work_dir, f'sample{sample_id}_cam{i}.png')
-        box_img.save(save_path)
-
-        box_imgs.append(box_img)
+    bboxes = input_dict['ann_info']['bboxes']
+    labels = input_dict['ann_info']['labels']
+    save_path = os.path.join(cfg.work_dir, f'sample_{sample_idx}.png')
+    img = imshow_det_bboxes(filepath, bboxes, labels, show=True, out_file=save_path)
 
 
 def main():
@@ -99,6 +84,7 @@ def main():
     img_info = ds.data_infos[sample_idx]  # before get_data_info()
     ann_info = ds.get_ann_info(sample_idx)
     input_dict = dict(img_info=img_info, ann_info=ann_info)
+    input_dict = ds.pre_pipeline(input_dict)
     x = ds[sample_idx]  # after pipeline
     if args.debug:
         import pdb; pdb.set_trace()
@@ -112,12 +98,13 @@ def main():
             samples_per_gpu=1,
             workers_per_gpu=cfg.data.workers_per_gpu,
             dist=False,
-            shuffle=False)
+            shuffle=False
+        )
         y = next(iter(data_loader))
         import pdb; pdb.set_trace()
 
 
-# python dev/vis_ds.py configs/_base_/datasets/coco_detection.py --split test \
+# python dev/visualize/vis_ds.py configs/_base_/datasets/coco_detection.py --split test \
 # [--vis-2d --loader --work-dir ./work_dir/debug]
 if __name__ == '__main__':
     main()
