@@ -7,7 +7,7 @@ from mmdet_plugin.data_converter.waymo_converter import WaymoConverter
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--format', required=True, choices=['ply', 'kitti'])
+    parser.add_argument('--format', required=True, choices=['ply', 'kitti', 'stat'])
     parser.add_argument('--split', required=True, choices=['training', 'validation', 'testing'])
     parser.add_argument('--num_segs', type=int, default=None, help='number of segments')
 
@@ -27,6 +27,8 @@ def main():
         converter.export_bbox_2d(root=root, split=split, num_segs=num_segs, out_path=out_path)
     elif args.format == 'ply':
         converter.export_bbox_2d_ply(root='./data/waymo', split=split)
+    elif args.format == 'stat':
+        converter.get_cls_stat(ann_path=f'./data/waymo/ply_format/waymo_det2d_infos_{split}.pkl')
     else:
         raise ValueError
 

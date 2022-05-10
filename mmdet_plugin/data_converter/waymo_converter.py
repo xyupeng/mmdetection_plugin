@@ -213,3 +213,15 @@ class WaymoConverter:
         t2 = time.time()
         tot_time = format_time(t2 - t1)
         print(f'==> Done (Total time={tot_time}).')
+
+    def get_cls_stat(self, ann_path):
+        num_cls = [0] * 4
+        with open(ann_path, 'rb') as f:
+            infos = pickle.load(f)
+        for info_dict in infos:
+            labels = info_dict['labels']
+            for l in labels:
+                num_cls[l] += 1
+        print('class distribution:\n', num_cls)
+                
+
