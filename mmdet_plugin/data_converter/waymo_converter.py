@@ -223,5 +223,5 @@ class WaymoConverter:
             for l in labels:
                 num_cls[l] += 1
         print('class distribution:\n', num_cls)
-                
-
+        # training: [909010, 253608, 0, 7410]
+        # validation: [260620, 61305, 0, 1855]
