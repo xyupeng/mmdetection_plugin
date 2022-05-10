@@ -11,10 +11,10 @@ from mmdet.datasets.custom import CustomDataset
 
 
 @DATASETS.register_module()
-class WaymoDet2D(CustomDataset):
+class WaymoDet2DPlyFormat(CustomDataset):
     def __init__(self, load_interval=1, **kwargs):
         self.load_interval = load_interval
-        super(WaymoDet2D, self).__init__(**kwargs)
+        super(WaymoDet2DPlyFormat, self).__init__(**kwargs)
 
     def load_annotations(self, ann_path):
         """
@@ -22,11 +22,10 @@ class WaymoDet2D(CustomDataset):
             ann_path: absolute path to info file
 
         Returns:
-            data_infos (list[dict]):  # first order: cam_type; second: sample_idx
+            data_infos (list[dict]):  #  lexicographic order by {seg_name}_{frame_idx}_{cam_id}
                 data_infos[0]: {
-                    'sample_idx' (str): 0000000  # 1000000 for validation
                     'cam_type' (str): cam_type  # ('CAM_FRONT', 'CAM_FRONT_LEFT'...)
-                    'image_path' (str): image_0/0000000.png
+                    'image_path' (str): validation_0000/{seg_name}_{frame_idx}_{cam_id}.png  # cam_id within {1, 2, 3, 4, 5}
                     'filename' (str): the same as 'image_path'
                     'bboxes': ndarray(shape=[N, 4], dtype=np.float32); format: [x0, y0, x1, y1]
                     'labels': ndarray(shape=[N], dtype=np.int64)
@@ -37,7 +36,6 @@ class WaymoDet2D(CustomDataset):
         with open(ann_path, 'rb') as f:
             infos = pickle.load(f)
 
-        # first order: cam; second: sample_idx
         for cam_type in infos[0].keys():
             for info_dict in infos:
                 new_dict = info_dict[cam_type].copy()

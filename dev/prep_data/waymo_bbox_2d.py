@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append('.')
 import argparse
 from mmdet_plugin.data_converter.waymo_converter import WaymoConverter
 
@@ -24,9 +26,12 @@ def main():
     root = './data/waymo'
 
     converter = WaymoConverter(root=os.path.join(root, 'waymo_format'))
-    out_path = os.path.join(root, f'kitti_format/waymo_det2d_infos_{split}_seg_{num_segs}.pkl')
     split = split_dict[split]
-    converter.export_bbox_2d(split=split, num_segs=num_segs, out_path=out_path)
+
+    # out_path = os.path.join(root, f'kitti_format/waymo_det2d_infos_{split}_seg_{num_segs}.pkl')
+    # converter.export_bbox_2d(root=root, split=split, num_segs=num_segs, out_path=out_path)
+
+    converter.export_bbox_2d_ply(root='./data/waymo', split=split)
 
 
 main()
