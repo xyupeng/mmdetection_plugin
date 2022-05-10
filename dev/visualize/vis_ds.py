@@ -68,7 +68,7 @@ def vis_2d(input_dict, sample_idx, cfg):
     bboxes = input_dict['ann_info']['bboxes']  # shape=[N, 4]; format=xyxy
     labels = input_dict['ann_info']['labels']  # shape=[N]
     save_path = os.path.join(cfg.work_dir, f'sample_{sample_idx}.png')
-    img = imshow_det_bboxes(filepath, bboxes, labels, show=True, out_file=save_path)
+    img = imshow_det_bboxes(filepath, bboxes, labels, show=True, out_file=save_path, thickness=1)
 
 
 def main():
