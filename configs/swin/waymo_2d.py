@@ -42,11 +42,26 @@ model = dict(
 )
 
 # dataset
+data_root = './data/waymo/ply_format'
+info_format = 'ply'
 data = dict(
     samples_per_gpu=2,
     workers_per_gpu=2,
     train=dict(
+        data_root=data_root,
+        info_format=info_format,
+        ann_file='waymo_det2d_infos_training.pkl',
         load_interval=1,
+    ),
+    val=dict(
+        data_root=data_root,
+        info_format=info_format,
+        ann_file='waymo_det2d_infos_valdation.pkl',
+    ),
+    test=dict(
+        data_root=data_root,
+        info_format=info_format,
+        ann_file='waymo_det2d_infos_validation.pkl',
     ),
 )
 evaluation = dict(interval=2, metric='bbox')

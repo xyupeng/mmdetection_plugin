@@ -1,7 +1,8 @@
 ## Prepare data
 ```
 # waymo 2d bbox
-python dev/prep_data/waymo_bbox_2d.py --split train [--num_segs 5]
+python dev/prep_data/waymo_bbox_2d.py --format kitti --split train [--num_segs 5]
+python dev/prep_data/waymo_bbox_2d.py --format ply --split train
 ```
 
 

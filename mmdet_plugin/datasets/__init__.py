@@ -1,2 +1,1 @@
-from .waymo_det_2d_kitti_format import WaymoDet2DKittiFormat
-from .waymo_det_2d_ply_format import WaymoDet2DPlyFormat
+from .waymo_det_2d import WaymoDet2D

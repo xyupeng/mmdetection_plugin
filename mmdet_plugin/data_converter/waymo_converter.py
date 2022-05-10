@@ -139,11 +139,14 @@ class WaymoConverter:
         sub_dirs = [os.path.join(split_dir, fname) for fname in os.listdir(split_dir) if os.path.isdir(os.path.join(split_dir, fname))]
         sub_dirs = sorted(sub_dirs)
 
+        out_paths = []
         for sub_dir in sub_dirs:
             infos = []
             sub_dirname = os.path.basename(sub_dir)
             out_path = os.path.join(root, 'ply_format', split, f'{sub_dirname}.pkl')
-            assert not os.path.isfile(out_path)
+            out_paths.append(out_path)
+            if os.path.isfile(out_path):
+                continue
 
             tfrecord_paths = sorted(glob(os.path.join(sub_dir, '*.tfrecord')))
             for seg_idx, path in enumerate(tfrecord_paths):
@@ -198,6 +201,14 @@ class WaymoConverter:
 
             with open(out_path, 'wb') as f:
                 pickle.dump(infos, f)
+
+        data_all = []
+        for out_path in out_paths:
+            with open(out_path, 'rb') as f:
+                data = pickle.load(f)
+            data_all += data
+        with open(os.path.join(root, f'ply_format/waymo_det2d_infos_{split}.pkl'), 'wb') as f:
+            pickle.dump(data_all, f)
 
         t2 = time.time()
         tot_time = format_time(t2 - t1)

@@ -1,6 +1,9 @@
-# dataset settings
+# dataset settings; default info_format='kitti'; choices=['ply', 'kitti']
 dataset_type = 'WaymoDet2D'
 data_root = './data/waymo/kitti_format'
+info_format = 'kitti'
+num_cams = 5
+
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -33,23 +36,30 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
+        info_format=info_format,
+        num_cams=5,
+        load_interval=1,
         data_root=data_root,
-        ann_file='waymo_det2d_infos_train_seg_5.pkl',
-        img_prefix='training',
+        ann_file='waymo_det2d_infos_training_seg_5.pkl',  # os.path.join(data_root, ann_file)
+        img_prefix='training',  # join(data_root, img_prefix, data_infos[i]['filename'])
         pipeline=train_pipeline,
     ),
     val=dict(
         type=dataset_type,
+        info_format=info_format,
+        num_cams=5,
         data_root=data_root,
-        ann_file='waymo_det2d_infos_val_seg_5.pkl',
-        img_prefix='training',
+        ann_file='waymo_det2d_infos_validation_seg_5.pkl',
+        img_prefix='validation',
         pipeline=test_pipeline,
     ),
     test=dict(
         type=dataset_type,
+        info_format=info_format,
+        num_cams=5,
         data_root=data_root,
-        ann_file='waymo_det2d_infos_val_seg_5.pkl',
-        img_prefix='training',
+        ann_file='waymo_det2d_infos_validation_seg_5.pkl',
+        img_prefix='validation',
         pipeline=test_pipeline,
     ),
 )
