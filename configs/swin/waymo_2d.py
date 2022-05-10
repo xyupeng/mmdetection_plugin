@@ -11,8 +11,7 @@ custom_imports = dict(
     allow_failed_imports=False
 )
 
-# pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
-pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.2/mask_rcnn_swin_tiny_patch4_window7.pth'  # TODO: load mask rcnn
+ckpt = './checkpoints/debug/mask_rcnn_swin-t_coco.pth'
 model = dict(
     backbone=dict(
         _delete_=True,
@@ -29,9 +28,8 @@ model = dict(
         drop_path_rate=0.2,
         patch_norm=True,
         out_indices=(0, 1, 2, 3),
-        with_cp=False,
-        convert_weights=True,
-        init_cfg=dict(type='Pretrained', checkpoint=pretrained),
+        # convert_weights=True,
+        init_cfg=dict(type='Pretrained', checkpoint=ckpt),
     ),
     neck=dict(in_channels=[96, 192, 384, 768]),
     roi_head=dict(
@@ -56,7 +54,7 @@ data = dict(
     val=dict(
         data_root=data_root,
         info_format=info_format,
-        ann_file='waymo_det2d_infos_valdation.pkl',
+        ann_file='waymo_det2d_infos_validation.pkl',
     ),
     test=dict(
         data_root=data_root,

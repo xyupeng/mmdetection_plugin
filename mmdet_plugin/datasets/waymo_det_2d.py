@@ -115,7 +115,7 @@ class WaymoDet2D(CustomDataset):
         return valid_inds
 
     def _set_group_flag(self):
-        pass
+        self.flag = np.zeros(len(self), dtype=np.uint8)
 
     def __getitem__(self, idx):
         if self.test_mode:
