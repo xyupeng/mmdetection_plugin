@@ -11,6 +11,9 @@ from mmdet.datasets.custom import CustomDataset
 
 @DATASETS.register_module()
 class WaymoDet2D(CustomDataset):
+
+    CLASSES = ('Vehicle', 'Pedestrian', 'Sign', 'Cyclist')
+
     def __init__(self, info_format, num_cams=5, load_interval=1, **kwargs):
         assert info_format in ['ply', 'kitti']
 
