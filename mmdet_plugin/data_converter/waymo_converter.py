@@ -133,23 +133,22 @@ class WaymoConverter:
         sample_path = os.path.join(root, 'ply_format', split, 'sorted.txt')
         with open(sample_path, 'r') as f:
             frame_list = [line.strip() for line in f.readlines()]
-            import pdb; pdb.set_trace()
         prev_idx, cur_idx = 0, 0
 
         split_dir = os.path.join(root, 'waymo_format', split)
-        sub_dirs = [os.path.join(split_dir, fname) for fname in os.listdir(split_dir) if os.path.isdir(split_dir, fname)]
-        import pdb; pdb.set_trace()
+        sub_dirs = [os.path.join(split_dir, fname) for fname in os.listdir(split_dir) if os.path.isdir(os.path.join(split_dir, fname))]
+        sub_dirs = sorted(sub_dirs)
 
         for sub_dir in sub_dirs:
             infos = []
             sub_dirname = os.path.basename(sub_dir)
-            out_path = os.path.join(os.path.dirname(sub_dir), f'{sub_dirname}.pkl')
+            out_path = os.path.join(root, 'ply_format', split, f'{sub_dirname}.pkl')
             assert not os.path.isfile(out_path)
 
             tfrecord_paths = sorted(glob(os.path.join(sub_dir, '*.tfrecord')))
             for seg_idx, path in enumerate(tfrecord_paths):
                 print(f'==> Start {sub_dirname}/seg_{seg_idx}...')
-                seg_name = os.path.basename(path).splitext()[0]
+                seg_name = os.path.basename(path).split('.')[0]
 
                 # get 3D segmentation task frames for this segment
                 while seg_name in frame_list[cur_idx]:
@@ -158,9 +157,8 @@ class WaymoConverter:
                         break
                 frame_ids = frame_list[prev_idx: cur_idx]
                 prev_idx = cur_idx
-                frame_ids = [int(line.split('_')[-1].split('.')[0]) for line in frame_list]
+                frame_ids = [int(line.split('_')[-1].split('.')[0]) for line in frame_ids]
                 frame_ids = sorted(frame_ids)
-                import pdb; pdb.set_trace()
 
                 # generate info dict for this segment
                 dataset = tf.data.TFRecordDataset(path, compression_type='')
@@ -196,7 +194,6 @@ class WaymoConverter:
                             'bboxes': bboxes,
                             'labels': labels,
                         }
-                        import pdb; pdb.set_trace()
                         infos.append(info)
 
             with open(out_path, 'wb') as f:
